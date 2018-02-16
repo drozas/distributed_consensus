@@ -12,8 +12,8 @@ public class CompliantNode implements Node {
 	private double p_txDistribution = 0; 
 	private int numRounds = 0;
 	
-	private boolean[] followees;
-	private boolean[] malicious_followees = new boolean[1000]; // This is a very ugly way... but just to go through the check on coursera quickly
+	private boolean[] followees = new boolean[100000];
+	private boolean[] malicious_followees = new boolean[100000]; // This is a very ugly way... but just to go through the check on coursera quickly
 	private Set<Transaction> pendingTransactions;
 
     public CompliantNode(double p_graph, double p_malicious, double p_txDistribution, int numRounds) {
@@ -53,19 +53,22 @@ public class CompliantNode implements Node {
 
     public void receiveFromFollowees(Set<Candidate> candidates) {
     	// Add the set of candidate transactions I receive to my list - with this is already 80% score /// COMMENT IF TRYING THE MORE SOPHISTICATED APPROACH
-        for (Candidate c : candidates) {
+        /*for (Candidate c : candidates) {
 			this.pendingTransactions.add(c.tx);
-		}
+		}*/
         
-        // Basic detection of malicious nodes: add them to a list of untrusted followees if it is not in any of the candidate transactions NOT WORKING
-        /*for (int i=0; i<this.followees.length; i++){
-        	//If it is my a followee of mine
+        // Basic detection of malicious nodes: add them to a list of untrusted followees if it is not in any of the candidate transactions STILL 80%
+        for (int i=0; i<this.followees.length; i++){
+        	//If it is a followee of mine
         	if (this.followees[i]){
-        		//And it is not reflected in any of the candidate transactions
-        		if (!candidates.contains(this.followees[i])){
-        			//I put it into my list of malitious followees
-        			this.malicious_followees[i] = true;
-        		}
+        		//Going through set manually
+        		boolean is_malitious = true;
+        		for (Candidate c : candidates) {
+					if(c.sender==i){
+						is_malitious = false;
+					}	
+				}
+        		this.malicious_followees[i] = is_malitious;
         	}
         }
         
@@ -74,6 +77,6 @@ public class CompliantNode implements Node {
         	if (!this.malicious_followees[c.sender]){
     			this.pendingTransactions.add(c.tx);
         	}
-		}*/
+		}
     }
 }
