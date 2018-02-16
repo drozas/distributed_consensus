@@ -25,6 +25,12 @@ public class CompliantNode implements Node {
     	
     	//Assign rest of values
     	this.pendingTransactions = new HashSet<Transaction>();
+    	
+    	//Initialise all followees as trusted
+        for (int i=0; i<this.malicious_followees.length; i++){
+        	//If it is my a followee of mine
+        	this.malicious_followees[i] = false;
+        }
        
     }
 
@@ -46,21 +52,19 @@ public class CompliantNode implements Node {
     }
 
     public void receiveFromFollowees(Set<Candidate> candidates) {
-    	// Add the set of candidate transactions I receive to my list
-        /*for (Candidate c : candidates) {
+    	// Add the set of candidate transactions I receive to my list - with this is already 80% score /// COMMENT IF TRYING THE MORE SOPHISTICATED APPROACH
+        for (Candidate c : candidates) {
 			this.pendingTransactions.add(c.tx);
-		}*/
+		}
         
-        // Basic detection of malicious nodes: add them to a list of untrusted followees if it is not in any of the candidate transactions
-        for (int i=0; i<this.followees.length; i++){
+        // Basic detection of malicious nodes: add them to a list of untrusted followees if it is not in any of the candidate transactions NOT WORKING
+        /*for (int i=0; i<this.followees.length; i++){
         	//If it is my a followee of mine
         	if (this.followees[i]){
         		//And it is not reflected in any of the candidate transactions
         		if (!candidates.contains(this.followees[i])){
         			//I put it into my list of malitious followees
         			this.malicious_followees[i] = true;
-        		}else{
-        			this.malicious_followees[i] = false;
         		}
         	}
         }
@@ -70,6 +74,6 @@ public class CompliantNode implements Node {
         	if (!this.malicious_followees[c.sender]){
     			this.pendingTransactions.add(c.tx);
         	}
-		}
+		}*/
     }
 }
